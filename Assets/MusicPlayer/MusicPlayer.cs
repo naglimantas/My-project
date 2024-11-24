@@ -1,14 +1,27 @@
-using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class MusicPlayer : MonoBehaviour
 {
     AudioSource source;
+    public TMP_Text musicNameText;
+    public TMP_Text musicLengthText;
+    public Transform dancer;
+    public UnityEvent<float> onBeat;
 
     void Start()
     {
         source = GetComponent<AudioSource>();
+        musicNameText.text = source.clip.name;
+        musicLengthText.text = source.clip.length.ToString();
+    }
+
+    void Update()
+    {
+        float[] data = new float[512];
+        source.clip.GetData(data, source.timeSamples);
+        onBeat.Invoke(data[0]);
     }
 
     public void Pause()
@@ -20,5 +33,4 @@ public class MusicPlayer : MonoBehaviour
     {
         source.time = time;
     }
-        
 }
